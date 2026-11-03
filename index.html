@@ -274,6 +274,23 @@ table.cmp td:first-child{font-weight:700;color:var(--tcx)}
 .cwcard{margin:12px 0}
 .ct{border-collapse:collapse;width:100%;font-size:15px}.ct td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:top}.ct td:first-child{font-weight:700;color:var(--sea);white-space:nowrap}
 
+/* ===== bấm từ & phần được thêm ===== */
+mark.add,.add{background:var(--sunSoft);border-bottom:2px solid var(--sun);border-radius:3px;padding:0 1px;color:inherit}
+.noadd .add{background:none;border-bottom:0}
+.w{cursor:pointer;border-radius:3px}
+.w:hover,.w:focus-visible{background:var(--seaSoft);outline:none}
+.w.sel{background:var(--sun);color:#10304A}
+.sl .stx{margin-right:2px}
+.wordcard{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:min(520px,calc(100% - 24px));z-index:60;background:var(--paper);border:2px solid var(--sea);border-radius:16px;padding:10px 14px 12px;box-shadow:0 8px 28px rgba(0,0,0,.25)}
+.wordcard[hidden]{display:none}
+.wordcard .wx{position:absolute;right:8px;top:6px;border:0;background:transparent;font-size:18px;cursor:pointer;color:var(--muted)}
+.wordcard .wh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:22px;padding-right:26px}
+.wordcard .ipa{font-size:18px;color:var(--sea);font-weight:600}
+.wordcard .wm{margin-top:4px;font-size:17px}
+.wordcard .wpos{display:inline-block;border-radius:999px;padding:0 10px;font-size:13px;font-weight:800;background:var(--seaSoft);border:1.5px solid var(--sea);margin-right:4px}
+.wordcard .wn{margin-top:4px;font-size:14px;color:var(--muted)}
+#readBox{padding-bottom:70px}
+
 </style>
 </head>
 <body>
@@ -288,10 +305,9 @@ table.cmp td:first-child{font-weight:700;color:var(--tcx)}
       <ul>
         <li>① Xem bài gốc đã được thầy/cô sửa và hiểu từng lỗi</li>
         <li>② Luyện 7 nhóm lỗi (mỗi nhóm 5 câu)</li>
-        <li>③ Học từ nối để câu văn mượt hơn, rồi tự nối câu</li>
-        <li>④ Đọc bài nâng cấp, bấm từng câu để xem nghĩa tiếng Việt</li>
-        <li>⑤ Luyện giữ <b>các động từ chính cùng một thì</b></li>
-        <li>⑥ Đọc ghi âm trả bài, kể lại bằng lời của em · ⑦ Nộp bài</li>
+        <li>③ Từ nối: học nghĩa, chọn từ nối, tự nối 3 câu</li>
+        <li>④ Luyện giữ <b>các động từ chính cùng một thì</b></li>
+        <li>⑤ Đọc bài đã được thêm màu sắc (bấm từ chưa hiểu để xem phiên âm, nghĩa, loại từ), ghi âm và kể lại · 📨 Nộp bài</li>
       </ul>
     </div>
   </div>
@@ -307,9 +323,8 @@ table.cmp td:first-child{font-weight:700;color:var(--tcx)}
   <button class="tab" role="tab" data-p="orig" aria-selected="true">① Bài đã sửa</button>
   <button class="tab" role="tab" data-p="err" aria-selected="false">② Luyện lỗi</button>
   <button class="tab" role="tab" data-p="conn" aria-selected="false">③ Từ nối</button>
-  <button class="tab" role="tab" data-p="up" aria-selected="false">④ Bài nâng cấp</button>
-  <button class="tab" role="tab" data-p="same" aria-selected="false">⑤ Một thì</button>
-  <button class="tab" role="tab" data-p="say" aria-selected="false">⑥ Đọc &amp; nói</button>
+  <button class="tab" role="tab" data-p="same" aria-selected="false">④ Một thì</button>
+  <button class="tab" role="tab" data-p="say" aria-selected="false">⑤ Đọc &amp; nói</button>
   <button class="tab" role="tab" data-p="send" aria-selected="false">📨 Nộp bài</button>
 </nav>
 
@@ -334,28 +349,17 @@ table.cmp td:first-child{font-weight:700;color:var(--tcx)}
   <h2>③ Từ nối: làm câu văn mượt hơn</h2>
   <p class="hint">Bài gốc có nhiều câu ngắn rời rạc (<i>I went… I had… I talked…</i>). Dùng từ nối để các ý liền mạch như bài nâng cấp.</p>
   <div id="connBox"></div>
-  <h3>A. Chọn từ nối đúng (10 câu)</h3>
+  <h3>A. Chọn nghĩa tiếng Việt của từ nối (10 câu)</h3>
+  <div id="mqBox"></div>
+  <h3>B. Chọn từ nối đúng (10 câu)</h3>
   <div id="cqBox"></div>
-  <h3>B. Tự nối hai câu thành một câu</h3>
+  <h3>C. Tự nối hai câu thành một câu (3 câu)</h3>
   <p class="hint">Dùng từ nối gợi ý. Cả câu phải ở <b>quá khứ</b>. Bấm ✓ Kiểm tra.</p>
   <div id="combBox"></div>
 </section>
 
-<section class="panel" id="p-up">
-  <h2>④ Bài nâng cấp</h2>
-  <p class="hint">Đọc to và so sánh với bài gốc. Bật màu để thấy <b>từ nối</b> và <b>động từ chính</b>. Bấm <b>🌐 Nghĩa</b> ở từng câu để xem tiếng Việt.</p>
-  <div class="card tog">
-    <label><input type="checkbox" id="tgC" checked> <span class="cn">Từ nối</span></label>
-    <label><input type="checkbox" id="tgV" checked> <span class="vb">Động từ chính (quá khứ)</span></label>
-    <label><input type="checkbox" id="tgP" checked> <span class="vp">Hiện tại có chủ ý</span></label>
-    <label><input type="checkbox" id="tgVi"> 🌐 Hiện nghĩa mọi câu</label>
-  </div>
-  <div id="upBox"></div>
-  <div class="mbox" id="upNote"></div>
-</section>
-
 <section class="panel" id="p-same">
-  <h2>⑤ Các động từ chính cùng một thì</h2>
+  <h2>④ Các động từ chính cùng một thì</h2>
   <div class="card">
     <div class="rulebox">
       <b>Quy tắc:</b> khi kể một chuỗi việc <b>đã xảy ra</b>, mọi động từ chính của chuỗi đó đều ở <b>quá khứ</b>.
@@ -376,9 +380,16 @@ table.cmp td:first-child{font-weight:700;color:var(--tcx)}
 </section>
 
 <section class="panel" id="p-say">
-  <h2>⑥ Đọc ghi âm và kể lại</h2>
+  <h2>⑤ Đọc ghi âm và kể lại</h2>
   <p class="hint">Nghe mẫu 🔊 → đọc theo → bấm 🎙 ghi âm. Máy chấm điểm % và chỉ ra từ đọc chưa tốt. Nghe lại, thấy ổn thì bấm 📤 Gửi. Bấm <b>🌐 Nghĩa</b> để xem tiếng Việt.</p>
-  <h3>A. Đọc bài nâng cấp</h3>
+  <h3>A. Đọc bài đã được thêm màu sắc</h3>
+  <div class="mbox" id="readIntro"></div>
+  <div class="card tog">
+    <label><input type="checkbox" id="tgAdd" checked> <mark class="add">Tô vàng phần được thêm</mark></label>
+    <label><input type="checkbox" id="tgVi"> 🌐 Hiện nghĩa mọi câu</label>
+  </div>
+  <p class="hint">👆 Bấm vào <b>từ chưa hiểu</b> để xem phiên âm (IPA), nghĩa và loại từ. Đọc từng câu theo mẫu 🔊, rồi đọc cả đoạn và ghi âm.</p>
+  <details class="card"><summary><b>Xem lại bài gốc đã sửa để so sánh</b></summary><div class="ptext" id="origFixed" style="margin-top:6px"></div></details>
   <div id="readBox"></div>
   <h3>B. Đọc các câu có từ nối</h3>
   <div id="cReadBox"></div>
@@ -404,6 +415,7 @@ table.cmp td:first-child{font-weight:700;color:var(--tcx)}
 </div>
 
 <div class="toast" id="toast" role="status"></div>
+<div class="wordcard" id="wordCard" hidden role="dialog" aria-live="polite"></div>
 <div class="cloud" id="cloud" hidden></div>
 
 <div class="gate" id="gate" hidden>
@@ -421,7 +433,84 @@ table.cmp td:first-child{font-weight:700;color:var(--tcx)}
 /* ===== DỮ LIỆU: SỬA BÀI VIẾT "LAST NIGHT & THIS MORNING" ===== */
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwnf8X3_Xfk9F_8HQtBwSFU_s28sRjxKb0aFaHCA4ybmMJvgaztBAbdvaFzITdbVXBt/exec';
 const LESSON = 'Sua bai Last night This morning';
-const DICT = {};
+const DICT = {
+ 'last':['tính từ','/lɑːst/','vừa qua, trước đó','last night = tối qua'],
+ 'night':['danh từ','/naɪt/','đêm, buổi tối',''],
+ 'i':['đại từ','/aɪ/','tôi, em, mình',''],
+ 'visited':['động từ','/ˈvɪzɪtɪd/','đã đến thăm','V2 của visit'],
+ 'my':['tính từ sở hữu','/maɪ/','của tôi, của em',''],
+ "grandparents'":['danh từ sở hữu','/ˈɡrænpeərənts/','của ông bà',"dấu ' sau s: sở hữu của nhiều người"],
+ 'house':['danh từ','/haʊs/','ngôi nhà',''],
+ 'and':['liên từ','/ænd/','và',''],
+ 'had':['động từ','/hæd/','đã có, đã ăn','V2 của have: had dinner = đã ăn tối'],
+ 'dinner':['danh từ','/ˈdɪnə/','bữa tối',''],
+ 'there':['trạng từ','/ðeə/','ở đó',''],
+ 'with':['giới từ','/wɪð/','cùng với',''],
+ 'them':['đại từ','/ðem/','họ, ông bà (tân ngữ)',''],
+ 'other':['tính từ','/ˈʌðə/','khác',''],
+ 'relatives':['danh từ','/ˈrelətɪvz/','họ hàng',''],
+ 'after':['giới từ / liên từ','/ˈɑːftə/','sau khi, sau','after having dinner = sau khi ăn tối'],
+ 'having':['động từ','/ˈhævɪŋ/','(việc) ăn, có','V-ing của have'],
+ 'did':['động từ','/dɪd/','đã làm','V2 của do: did my homework = đã làm bài tập'],
+ 'homework':['danh từ','/ˈhəʊmwɜːk/','bài tập về nhà','không đếm được'],
+ 'before':['giới từ / liên từ','/bɪˈfɔː/','trước khi',''],
+ 'a':['mạo từ','/ə/','một',''],
+ 'chat':['danh từ','/tʃæt/','cuộc trò chuyện','have a chat = trò chuyện'],
+ 'grandparents':['danh từ','/ˈɡrænpeərənts/','ông bà','viết liền, có -s'],
+ 'shared':['động từ','/ʃeəd/','đã chia sẻ, đã kể','V2 của share'],
+ 'what':['đại từ','/wɒt/','điều mà, cái gì','what happened = điều đã xảy ra'],
+ 'happened':['động từ','/ˈhæpənd/','đã xảy ra','V2 của happen'],
+ 'in':['giới từ','/ɪn/','trong',''],
+ 'day':['danh từ','/deɪ/','ngày',''],
+ 'love':['động từ','/lʌv/','yêu, rất thích',''],
+ 'talking':['động từ','/ˈtɔːkɪŋ/','(việc) nói chuyện','V-ing của talk'],
+ 'to':['giới từ','/tuː/','với, đến','talk to someone = nói chuyện với ai'],
+ 'because':['liên từ','/bɪˈkɒz/','bởi vì',''],
+ 'it':['đại từ','/ɪt/','nó, điều đó',''],
+ 'makes':['động từ','/meɪks/','làm cho, khiến','make me feel = khiến em cảm thấy'],
+ 'me':['đại từ','/miː/','tôi, em (tân ngữ)',''],
+ 'feel':['động từ','/fiːl/','cảm thấy',''],
+ 'relaxed':['tính từ','/rɪˈlækst/','thư giãn, thoải mái',''],
+ 'they':['đại từ','/ðeɪ/','họ, ông bà',''],
+ 'always':['trạng từ','/ˈɔːlweɪz/','luôn luôn',''],
+ 'give':['động từ','/ɡɪv/','cho, đưa',''],
+ 'valuable':['tính từ','/ˈvæljuəbl/','quý giá, có giá trị',''],
+ 'advice':['danh từ','/ədˈvaɪs/','lời khuyên','không đếm được'],
+ 'later':['trạng từ','/ˈleɪtə/','sau đó, muộn hơn','later on = một lúc sau'],
+ 'on':['trạng từ / giới từ','/ɒn/','(later on) một lúc sau; trên',''],
+ 'went':['động từ','/went/','đã đi','V2 của go'],
+ 'back':['trạng từ','/bæk/','trở lại','went back home = đã về nhà'],
+ 'home':['trạng từ / danh từ','/həʊm/','về nhà, nhà','go home: không có to'],
+ 'since':['liên từ','/sɪns/','vì, bởi vì','since + lý do'],
+ 'this':['từ hạn định','/ðɪs/','này','this morning = sáng nay'],
+ 'morning':['danh từ','/ˈmɔːnɪŋ/','buổi sáng',''],
+ 'was':['động từ','/wɒz/','đã là, đã ở','V2 của be (I/he/she/it)'],
+ 'monday':['danh từ','/ˈmʌndeɪ/','thứ Hai','viết hoa'],
+ 'the':['mạo từ','/ðə/','(xác định) cái, người…',''],
+ 'first':['tính từ','/fɜːst/','đầu tiên, thứ nhất',''],
+ 'of':['giới từ','/ɒv/','của',''],
+ 'week':['danh từ','/wiːk/','tuần',''],
+ 'woke':['động từ','/wəʊk/','đã thức dậy','V2 của wake up'],
+ 'up':['trạng từ','/ʌp/','lên','woke up = thức dậy'],
+ 'early':['trạng từ','/ˈɜːli/','sớm',''],
+ 'as':['liên từ / giới từ','/æz/','như','as usual = như thường lệ'],
+ 'usual':['tính từ','/ˈjuːʒuəl/','thường lệ, quen thuộc',''],
+ 'breakfast':['danh từ','/ˈbrekfəst/','bữa sáng','had breakfast = ăn sáng'],
+ 'school':['danh từ','/skuːl/','trường học','go to school = đi học'],
+ 'happy':['tính từ','/ˈhæpi/','vui, hạnh phúc',''],
+ 'talk':['động từ','/tɔːk/','nói chuyện',''],
+ 'friends':['danh từ','/frendz/','bạn bè',''],
+ 'also':['trạng từ','/ˈɔːlsəʊ/','cũng',''],
+ 'answered':['động từ','/ˈɑːnsəd/','đã trả lời','V2 của answer'],
+ "teacher's":['danh từ sở hữu','/ˈtiːtʃəz/','của thầy/cô giáo',"'s = sở hữu của một người"],
+ 'questions':['danh từ','/ˈkwestʃənz/','các câu hỏi',''],
+ 'studied':['động từ','/ˈstʌdid/','đã học','V2 của study'],
+ 'hard':['trạng từ','/hɑːd/','chăm chỉ','studied hard = học chăm chỉ'],
+ 'big':['tính từ','/bɪɡ/','to, lớn, thịnh soạn','a big lunch = bữa trưa thịnh soạn'],
+ 'lunch':['danh từ','/lʌntʃ/','bữa trưa',''],
+ 'very':['trạng từ','/ˈveri/','rất',''],
+ 'hungry':['tính từ','/ˈhʌŋɡri/','đói',''],
+};
 
 /* ---------- Bài gốc của học sinh (đã đánh dấu) ---------- */
 // s = phần sai (gạch đỏ), f = cách sửa (đỏ đậm). x = thầy/cô bổ sung (tím)
@@ -519,30 +608,40 @@ const CQ = [
 // nối câu (gõ): [câu 1, câu 2, từ nối gợi ý, [từ nối chấp nhận], câu mẫu, nghĩa]
 const COMBINE = [
  ['I had dinner.','I did my homework.','After …',['after','then','after that','before','and then'],'After I had dinner, I did my homework.','Sau khi ăn tối, tôi làm bài tập.'],
- ['I woke up early.','It was Monday.','Since / Because …',['since','because','so'],'I woke up early because it was Monday.','Tôi dậy sớm vì hôm đó là thứ Hai.'],
  ['I talked with my grandparents.','I felt relaxed.','because / so …',['because','so','since'],'I talked with my grandparents, so I felt relaxed.','Tôi trò chuyện với ông bà nên thấy thư giãn.'],
- ['I was tired.','I did my homework.','but / although …',['but','although','however'],'I was tired, but I did my homework.','Tôi mệt nhưng vẫn làm bài tập.'],
- ['I had breakfast.','I went to school.','Then / After that …',['then','after that','and then','after','before','and'],'I had breakfast. Then I went to school.','Tôi ăn sáng. Sau đó tôi đến trường.'],
- ['I answered the questions.','I studied hard.','also / and …',['also','and','as well','too'],'I answered the questions and studied hard.','Tôi trả lời các câu hỏi và học hành chăm chỉ.']
+ ['I had breakfast.','I went to school.','Then / After that …',['then','after that','and then','after','before','and'],'I had breakfast. Then I went to school.','Tôi ăn sáng. Sau đó tôi đến trường.']
 ];
 
-/* ---------- BÀI NÂNG CẤP (đọc) ---------- */
-// c = từ nối · v = động từ chính ở quá khứ · p = hiện tại có chủ ý (sự thật / cảm xúc)
-const UP = [
- {t:'Last night',s:[
-  ['<span class="cn">Last night</span>, I <span class="vb">visited</span> my grandparents\' house and <span class="vb">had</span> dinner there with them and my other relatives.','Tối qua, em đến thăm nhà ông bà và ăn tối ở đó cùng ông bà và những người họ hàng khác.'],
-  ['<span class="cn">After</span> having dinner, I <span class="vb">did</span> my homework <span class="cn">before</span> having a chat with my grandparents.','Sau khi ăn tối, em làm bài tập về nhà rồi mới trò chuyện với ông bà.'],
-  ['I <span class="vb">shared</span> with them what <span class="vb">happened</span> in my day.','Em kể với ông bà những chuyện đã xảy ra trong ngày của em.'],
-  ['I <span class="vp">love</span> talking to them <span class="cn">because</span> it <span class="vp">makes</span> me feel relaxed <span class="cn">and</span> they always <span class="vp">give</span> me valuable advice.','Em thích trò chuyện với ông bà vì điều đó làm em thấy thư giãn và ông bà luôn cho em những lời khuyên quý giá.'],
-  ['<span class="cn">Later on</span>, I <span class="vb">went</span> back home.','Một lúc sau, em về nhà.']]},
- {t:'This morning',s:[
-  ['<span class="cn">Since</span> this morning <span class="vb">was</span> Monday, the first day of the week, I <span class="vb">woke</span> up early as usual, <span class="vb">had</span> breakfast, <span class="cn">and</span> <span class="vb">went</span> to school.','Vì sáng nay là thứ Hai, ngày đầu tuần, em thức dậy sớm như thường lệ, ăn sáng rồi đến trường.'],
-  ['I <span class="vb">was</span> happy to talk with my friends.','Em vui khi được nói chuyện với bạn bè.'],
-  ['I <span class="cn">also</span> <span class="vb">answered</span> the teacher\'s questions <span class="cn">and</span> <span class="vb">studied</span> hard.','Em cũng trả lời các câu hỏi của thầy cô và học hành chăm chỉ.'],
-  ['<span class="cn">After</span> school, I <span class="vb">went</span> home <span class="cn">and</span> <span class="vb">had</span> a big lunch.','Sau giờ học, em về nhà và ăn một bữa trưa thật no.'],
-  ['I <span class="vb">was</span> very hungry!','Em đói quá!']]}
+/* ---------- BÀI NÂNG CẤP (để đọc): {+ … +} = phần được thêm / đổi so với bài gốc đã sửa ---------- */
+const READTXT = [
+ {t:'Đoạn 1: Last night',s:[
+  ["Last night, I {+visited+} my grandparents' house and had dinner {+there with them and my other relatives+}.",'Tối qua, em đến thăm nhà ông bà và ăn tối ở đó cùng ông bà và những người họ hàng khác.'],
+  ["{+After having dinner,+} I did my homework {+before having a chat with+} my grandparents.",'Sau khi ăn tối, em làm bài tập về nhà rồi mới trò chuyện với ông bà.'],
+  ["{+I shared with them what happened in my day.+}",'Em kể với ông bà những chuyện đã xảy ra trong ngày của em.'],
+  ["{+I love talking to them because it makes me feel relaxed and they always give me valuable advice.+}",'Em thích trò chuyện với ông bà vì điều đó làm em thấy thư giãn và ông bà luôn cho em những lời khuyên quý giá.'],
+  ["{+Later on,+} I went {+back+} home.",'Một lúc sau, em về nhà.']]},
+ {t:'Đoạn 2: This morning',s:[
+  ["{+Since this morning was Monday, the first day of the week,+} I woke up {+early as usual,+} had breakfast, and went to school.",'Vì sáng nay là thứ Hai, ngày đầu tuần, em thức dậy sớm như thường lệ, ăn sáng rồi đến trường.'],
+  ["{+I was happy to+} talk with my friends.",'Em vui khi được nói chuyện với bạn bè.'],
+  ["I {+also+} answered the teacher's questions and studied {+hard+}.",'Em cũng trả lời các câu hỏi của thầy cô và học hành chăm chỉ.'],
+  ["{+After school,+} I went home and had {+a big+} lunch.",'Sau giờ học, em về nhà và ăn một bữa trưa thật no.'],
+  ["{+I was very hungry!+}",'Em đói quá!']]}
 ];
-const UP_NOTE = 'Các <b>động từ chính kể chuyện</b> (visited, had, did, shared, went, woke…) đều ở <b>quá khứ đơn</b> vì việc đã xảy ra tối qua và sáng nay. Riêng câu 4 dùng <b>hiện tại</b> (love, makes, give) vì nói về <b>cảm xúc và điều luôn đúng</b>: đây là cách dùng có chủ ý, không phải lỗi.';
+const READ_INTRO = 'Bài viết gốc của em đã đúng ý nhưng còn ngắn và rời rạc. Thầy/cô đã <b>thêm một số phần</b> để câu chuyện có <b>màu sắc</b> hơn: thêm chi tiết (<i>with my other relatives</i>), cảm xúc (<i>I love talking to them…</i>, <i>I was very hungry!</i>), từ nối (<i>After…, Later on, Since…</i>) và thông tin thời gian (<i>the first day of the week</i>). Phần được thêm hoặc đổi được <mark class="add">tô vàng</mark>. Các động từ kể chuyện vẫn cùng ở <b>quá khứ</b>; riêng câu nói về cảm xúc thường xuyên (<i>love, makes, give</i>) dùng hiện tại là có chủ ý.';
+
+// trắc nghiệm nghĩa tiếng Việt của từ nối (10)
+const MQ = [
+ ['<b>after</b> (After having dinner…) nghĩa là gì?',['sau khi','trước khi','bởi vì'],0,'<i>after</i> = sau khi.'],
+ ['<b>before</b> (…before having a chat) nghĩa là gì?',['sau khi','trước khi','nhưng'],1,'<i>before</i> = trước khi.'],
+ ['<b>because</b> nghĩa là gì?',['bởi vì','tuy nhiên','một lúc sau'],0,'<i>because</i> nêu lý do: bởi vì.'],
+ ['<b>so</b> (It was Monday, so I woke up early) nghĩa là gì?',['bởi vì','vì vậy, nên','nhưng'],1,'<i>so</i> nêu kết quả: vì vậy / nên.'],
+ ['<b>but</b> nghĩa là gì?',['và','nhưng','cũng'],1,'<i>but</i> = nhưng (hai ý trái ngược).'],
+ ['<b>however</b> nghĩa là gì?',['tuy nhiên','ngay khi','đầu tiên'],0,'<i>However</i> = tuy nhiên (đứng đầu câu, có dấu phẩy sau).'],
+ ['<b>later on</b> nghĩa là gì?',['trước đó','một lúc sau','trong khi'],1,'<i>Later on</i> = một lúc sau.'],
+ ['<b>also</b> nghĩa là gì?',['cũng','nhưng','vì vậy'],0,'<i>also</i> = cũng (đứng trước động từ chính).'],
+ ['<b>as soon as</b> nghĩa là gì?',['ngay khi','mặc dù','sau đó'],0,'<i>as soon as</i> = ngay khi.'],
+ ['<b>while</b> (I did my homework while she was cooking) nghĩa là gì?',['trong khi','trước khi','vì vậy'],0,'<i>while</i> = trong khi.']
+];
 
 /* ---------- MỘT THÌ XUYÊN SUỐT ---------- */
 const VERBS = [['wake up','woke up','thức dậy'],['have','had','ăn / có'],['go','went','đi'],['do','did','làm'],['eat','ate','ăn'],['visit','visited','thăm'],['talk','talked','nói chuyện'],['answer','answered','trả lời'],['study','studied','học'],['share','shared','chia sẻ'],['come','came','đến'],['see','saw','thấy'],['take','took','lấy, đi (xe)'],['meet','met','gặp'],['get','got','nhận, trở nên'],['be','was / were','thì, là, ở']];
@@ -1160,11 +1259,12 @@ function buildConn(){
     c.innerHTML=`<h3 style="margin:0 0 4px">${g.t} <span class="hint" style="font-weight:400">${esc(g.vi)}</span></h3><table class="ct">${g.ws.map(([w,vi,ex,exvi])=>`<tr><td>${esc(w)}<br><span style="font-weight:500;color:var(--muted);font-size:13px">${esc(vi)}</span></td><td>${esc(ex)} ${speakBtn(ex)}<div class="vn" style="color:var(--muted);font-size:14px">${esc(exvi)}</div></td></tr>`).join('')}</table>`;
     box.appendChild(c);
   });
-  quizSet('cq','#cqBox','③A Chọn từ nối',shuffleQ(CQ,17));
+  quizSet('mq','#mqBox','③A Chọn nghĩa tiếng Việt của từ nối',shuffleQ(MQ,11));
+  quizSet('cq','#cqBox','③B Chọn từ nối đúng',shuffleQ(CQ,17));
   const cb=$('#combBox');cb.innerHTML='';
   COMBINE.forEach((it,i)=>{
     const [a,b,hint,acc,model,mvi]=it;
-    typedItem(cb,'cb'+i,'③B Nối câu',`<b>${i+1}.</b> ${esc(a)} ${esc(b)} <span class="need" style="margin-left:6px">${esc(hint)}</span>`,`${a} + ${b}`,
+    typedItem(cb,'cb'+i,'③C Nối câu',`<b>${i+1}.</b> ${esc(a)} ${esc(b)} <span class="need" style="margin-left:6px">${esc(hint)}</span>`,`${a} + ${b}`,
       text=>{
         const res=analyzeSentence(text,['pa','+']);
         const has=acc.some(w=>new RegExp('\\b'+w+'\\b','i').test(text));
@@ -1174,25 +1274,11 @@ function buildConn(){
   });
 }
 
-/* ---------- ④ BÀI NÂNG CẤP ---------- */
-function buildUp(){
-  const box=$('#upBox');box.innerHTML='';
-  UP.forEach((p,pi)=>{
-    const c=h('div',{class:'card'});
-    c.innerHTML=`<h3 style="margin:0 0 4px">${esc(p.t)}</h3>`+p.s.map(([html,vi])=>`<div class="sl"><span>${html}</span><span class="btns">${speakBtn(stripTags(html))}<button class="b" data-vi style="padding:1px 9px">🌐 Nghĩa</button></span><div class="svi">🇻🇳 ${esc(vi)}</div></div>`).join('');
-    c.addEventListener('click',e=>{const b=e.target.closest('[data-vi]');if(b)b.closest('.sl').classList.toggle('vi');});
-    box.appendChild(c);
-  });
-  $('#upNote').innerHTML='📝 <b>Lưu ý:</b> '+UP_NOTE;
-  const apply=()=>{box.classList.toggle('nocn',!$('#tgC').checked);box.classList.toggle('novb',!$('#tgV').checked);box.classList.toggle('novp',!$('#tgP').checked);box.classList.toggle('allvi',$('#tgVi').checked);};
-  ['tgC','tgV','tgP','tgVi'].forEach(id=>$('#'+id).onchange=apply);apply();
-}
-
-/* ---------- ⑤ MỘT THÌ XUYÊN SUỐT ---------- */
+/* ---------- ④ MỘT THÌ XUYÊN SUỐT ---------- */
 const CWS = load('cws',{});
 function buildSame(){
   $('#verbBox').innerHTML=VERBS.map(([a,b,vi])=>`<button class="vg" data-hear="${esc(a)}, ${esc(b)}">${esc(a)} → <b>${esc(b)}</b><br><span style="color:var(--muted);font-size:13px">${esc(vi)}</span></button>`).join('');
-  quizSet('tq','#tqBox','⑤A Chọn bộ động từ cùng thì',shuffleQ(TQ,29));
+  quizSet('tq','#tqBox','④A Chọn bộ động từ cùng thì',shuffleQ(TQ,29));
   const cw=$('#cwBox');cw.innerHTML='';
   CW.forEach((p,pi)=>{
     const st=CWS[p.id]||(CWS[p.id]={sel:[],checked:false,ok:false});
@@ -1217,7 +1303,7 @@ function buildSame(){
   const rw=$('#rwBox');rw.innerHTML='';
   REWRITE.forEach((it,i)=>{
     const [src,kw,model,mvi]=it;
-    typedItem(rw,'rw'+i,'⑤C Viết lại sang quá khứ',`<b>${i+1}.</b> ${esc(src)} <span class="need">→ Yesterday, I …</span>`,src,
+    typedItem(rw,'rw'+i,'④C Viết lại sang quá khứ',`<b>${i+1}.</b> ${esc(src)} <span class="need">→ Yesterday, I …</span>`,src,
       text=>{
         const res=analyzeSentence(text,['pa','+']);
         const has=kw.some(w=>new RegExp('\\b'+w+'\\b','i').test(text));
@@ -1227,15 +1313,44 @@ function buildSame(){
   });
 }
 
-/* ---------- ⑥ ĐỌC & NÓI ---------- */
+/* ---------- bấm từ: IPA, nghĩa, loại từ ---------- */
+function markWords(m){
+  return m.split(/(\{\+|\+\})/).map(part=>{
+    if(part==='{+')return '<span class="add">';
+    if(part==='+}')return '</span>';
+    return part.replace(/([A-Za-z]+(?:'[A-Za-z]+|')?)|([^A-Za-z]+)/g,(x,w,o)=>w?`<span class="w" data-w="${esc(w.toLowerCase())}" tabindex="0" role="button">${esc(w)}</span>`:esc(o));
+  }).join('');
+}
+function showWord(el){
+  document.querySelectorAll('.w.sel').forEach(x=>x.classList.remove('sel'));
+  el.classList.add('sel');
+  const k=el.dataset.w,e=DICT[k],card=$('#wordCard');
+  const say=k.replace(/'s?$/,'').replace(/'$/,'');
+  card.innerHTML=`<button class="wx" aria-label="Đóng">✕</button><div class="wh"><b class="wt">${esc(el.textContent)}</b> ${e?`<span class="ipa">${esc(e[1])}</span>`:''} <button class="b" data-hear="${esc(say)}" style="padding:1px 9px">🔊</button></div>`
+    +(e?`<div class="wm"><span class="wpos">${esc(e[0])}</span> <b>${esc(e[2])}</b></div>${e[3]?`<div class="wn">💡 ${esc(e[3])}</div>`:''}`:'<div class="wn">Chưa có trong từ điển nhỏ của bài. Em hỏi thầy/cô nhé.</div>');
+  card.hidden=false;
+  card.querySelector('.wx').onclick=()=>{card.hidden=true;el.classList.remove('sel');};
+}
+
+/* ---------- ⑤ ĐỌC & NÓI ---------- */
 function buildSay(){
+  $('#readIntro').innerHTML=READ_INTRO;
+  $('#origFixed').textContent=FIXED_PLAIN;
   const rb=$('#readBox');rb.innerHTML='';
-  READS.forEach((p,i)=>{
+  READTXT.forEach((p,i)=>{
     const c=h('div',{class:'card'});
-    c.innerHTML=`<h3 style="margin:0">${esc(p.t)}</h3><div class="pbox">${esc(p.text)}</div>`;
-    c.appendChild(practice({key:'p'+i,label:'Đọc bài – '+p.t,target:p.text,maxSec:70}));
+    c.innerHTML=`<h3 style="margin:0 0 4px">${esc(p.t)}</h3>`+p.s.map(([m,vi])=>`<div class="sl"><span class="stx">${markWords(m)}</span><span class="btns">${speakBtn(m.replace(/\{\+|\+\}/g,''))}<button class="b" data-vi style="padding:1px 9px">🌐 Nghĩa</button></span><div class="svi">🇻🇳 ${esc(vi)}</div></div>`).join('');
+    c.appendChild(h('div',{class:'tip'},'🎙 Đọc cả đoạn (đọc theo mẫu 🔊 trước), rồi ghi âm:'));
+    c.appendChild(practice({key:'p'+i,label:'Đọc bài – '+p.t,target:READS[i].text,maxSec:70}));
     rb.appendChild(c);
   });
+  rb.addEventListener('click',e=>{
+    const v=e.target.closest('[data-vi]');if(v){v.closest('.sl').classList.toggle('vi');return;}
+    const w=e.target.closest('.w');if(w)showWord(w);
+  });
+  rb.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('w')){e.preventDefault();showWord(e.target);}});
+  const apply=()=>{rb.classList.toggle('noadd',!$('#tgAdd').checked);rb.classList.toggle('allvi',$('#tgVi').checked);};
+  $('#tgAdd').onchange=apply;$('#tgVi').onchange=apply;apply();
   const cr=$('#cReadBox');cr.innerHTML='';
   CONN_READ.forEach((s,i)=>{
     const c=h('div',{class:'card'});
@@ -1287,25 +1402,25 @@ function freeSpeak(f,i){
 }
 
 /* ---------- TỔNG KẾT & XEM LẠI ---------- */
-const QUIZ_IDS=['e1','e2','e3','e4','e5','e6','e7','cq','tq'];
+const QUIZ_IDS=['e1','e2','e3','e4','e5','e6','e7','mq','cq','tq'];
 function recKeys(){return Object.keys(RESULTS);}
 function recStats(){const ks=recKeys();const sc=ks.map(k=>RESULTS[k].score).filter(x=>x!=null);
   return{n:ks.length,sent:ks.filter(k=>RESULTS[k].sent).length,avg:sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length):null};}
-function recPart(k){return /^p\d/.test(k)?'⑥A Đọc bài nâng cấp':/^c\d/.test(k)?'⑥B Đọc câu nối':/^f\d/.test(k)?'⑥C Kể lại':'Nói câu của em';}
+function recPart(k){return /^p\d/.test(k)?'⑤A Đọc bài nâng cấp':/^c\d/.test(k)?'⑤B Đọc câu nối':/^f\d/.test(k)?'⑤C Kể lại':'Nói câu của em';}
 function recRows(){return recKeys().map(k=>{const r=RESULTS[k];return {part:recPart(k)+' (ghi âm)',question:r.label,answer:r.transcript||'(máy chưa nghe được)',correct:r.target||'(tự kể)',result:(r.score!=null?r.score+'%':(r.chkText||(r.self?'tự chấm '+r.self+'/3':'không chấm')))+(r.sent?' · đã gửi':' · CHƯA gửi'),x:''};});}
 function typedRows(){return Object.keys(TYPED).map(k=>{const t=TYPED[k];return {kind:'typed',part:t.part,question:t.q,answer:t.st.text||'(chưa viết)',correct:t.model,result:!t.st.text?'Chưa làm':t.st.ok?'Đúng':'Chưa đạt',x:t.mvi};});}
 function cwRows(){return CW.map(p=>{const st=CWS[p.id]||{sel:[],checked:false};let k=0;const verbs=p.parts.filter(x=>typeof x!=='string');
-  return {kind:'cw',part:'⑤B Tìm động từ sai thì',question:p.t,answer:st.checked?(st.sel.map(i=>verbs[i].w).join(', ')||'(không chọn)'):'(chưa làm)',correct:verbs.filter(v=>v.fix).map(v=>v.w+' → '+v.fix).join(', '),result:!st.checked?'Chưa làm':st.ok?'Đúng':'Sai',x:''};});}
+  return {kind:'cw',part:'④B Tìm động từ sai thì',question:p.t,answer:st.checked?(st.sel.map(i=>verbs[i].w).join(', ')||'(không chọn)'):'(chưa làm)',correct:verbs.filter(v=>v.fix).map(v=>v.w+' → '+v.fix).join(', '),result:!st.checked?'Chưa làm':st.ok?'Đúng':'Sai',x:''};});}
 function setLine(id){const s=SETS[id];return s.done()?`${s.score()}/${s.total}`+(s.done()<s.total?` (làm ${s.done()}/${s.total})`:''):'chưa làm';}
 function renderSummary(){
   const c=recStats();const unsent=c.n-c.sent;const cb=typedStats('cb'),rw=typedStats('rw');const cwOk=CW.filter(p=>CWS[p.id]&&CWS[p.id].ok).length;
   $('#sumBox').innerHTML=`<div class="tbl"><table class="sum"><tr><th>Phần</th><th>Kết quả</th></tr>
    ${QUIZ_IDS.map(id=>`<tr><td>${SETS[id].name}</td><td>${setLine(id)}</td></tr>`).join('')}
-   <tr><td>③B Nối câu</td><td>${cb.n}/${cb.tot} câu đúng</td></tr>
-   <tr><td>⑤B Tìm động từ sai thì</td><td>${cwOk}/${CW.length} đoạn đúng</td></tr>
-   <tr><td>⑤C Viết lại sang quá khứ</td><td>${rw.n}/${rw.tot} câu đúng</td></tr>
-   <tr><td>⑥ Ghi âm</td><td>${c.n} bản đã ghi · đã gửi ${c.sent}${c.avg!=null?' · điểm phát âm trung bình '+c.avg+'%':''}</td></tr></table></div>
-   ${unsent>0?`<p class="warn">⚠️ Em còn <b>${unsent}</b> bản ghi âm chưa gửi. Vào tab ③ / ⑤ / ⑥, nghe lại rồi bấm <b>📤 Gửi bản ghi này</b>.</p>`:''}`;
+   <tr><td>③C Nối câu</td><td>${cb.n}/${cb.tot} câu đúng</td></tr>
+   <tr><td>④B Tìm động từ sai thì</td><td>${cwOk}/${CW.length} đoạn đúng</td></tr>
+   <tr><td>④C Viết lại sang quá khứ</td><td>${rw.n}/${rw.tot} câu đúng</td></tr>
+   <tr><td>⑤ Ghi âm</td><td>${c.n} bản đã ghi · đã gửi ${c.sent}${c.avg!=null?' · điểm phát âm trung bình '+c.avg+'%':''}</td></tr></table></div>
+   ${unsent>0?`<p class="warn">⚠️ Em còn <b>${unsent}</b> bản ghi âm chưa gửi. Vào tab ③ / ④ / ⑤, nghe lại rồi bấm <b>📤 Gửi bản ghi này</b>.</p>`:''}`;
 }
 function allRows(){return [...QUIZ_IDS.flatMap(id=>SETS[id].rows()),...typedRows(),...cwRows(),...recRows()];}
 function buildSummary(){
@@ -1313,7 +1428,7 @@ function buildSummary(){
   return {summary:{recordings:c.sent,avg:c.avg,
     full:'Nối câu '+cb.n+'/'+cb.tot+' · Viết lại quá khứ '+rw.n+'/'+rw.tot+' · Động từ sai thì '+cwOk+'/'+CW.length,
     writes:'Luyện lỗi: '+['e1','e2','e3','e4','e5','e6','e7'].map(id=>setLine(id)).join(' | '),
-    quiz:'Từ nối '+setLine('cq')+' · Cùng thì '+setLine('tq')},
+    quiz:'Nghĩa từ nối '+setLine('mq')+' · Từ nối '+setLine('cq')+' · Cùng thì '+setLine('tq')},
     details:allRows().map(r=>({part:r.part,question:r.question,answer:r.answer,correct:r.correct,result:r.result}))};
 }
 $('#reviewBtn').onclick=()=>{
@@ -1422,13 +1537,13 @@ $('#submitBtn').onclick=sendSummary;
 
 /* ================= TAB & KHỞI TẠO ================= */
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
-  stopSpeak();
+  stopSpeak();$('#wordCard').hidden=true;document.querySelectorAll('.w.sel').forEach(x=>x.classList.remove('sel'));
   document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===t));
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+t.dataset.p));
   if(t.dataset.p==='send'){renderSummary();$('#reviewBox').innerHTML='';$('#reviewBtn').textContent='🔍 Xem lại bài của em (đúng/sai và giải thích)';}
   window.scrollTo({top:0});
 });
-buildOrig();buildErr();buildConn();buildUp();buildSame();buildSay();
+buildOrig();buildErr();buildConn();buildSame();buildSay();
 (function(){
   const g=$('#gate'),inp=$('#gateName');
   if(!load('name',''))g.hidden=false;else $('#stuName').value=load('name','');
